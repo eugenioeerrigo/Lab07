@@ -71,5 +71,6 @@ public class PowerOutagesController {
 	public void setModel(Model m) {
 		this.model = m;
 		NERC.getItems().addAll(this.model.getNercList());
+		NERC.getSelectionModel().select(2);
 	}
 }

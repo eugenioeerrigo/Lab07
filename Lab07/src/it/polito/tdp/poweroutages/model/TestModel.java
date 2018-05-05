@@ -6,5 +6,12 @@ public class TestModel {
 		
 		Model model = new Model();
 		System.out.println(model.getNercList());
+		
+		System.out.println("!"+model.getPOList()+"!");
+		
+		System.out.println("-"+model.getPOMap()+"-");
+		
+		System.out.println(model.getNercMap());
+
 	}
 }

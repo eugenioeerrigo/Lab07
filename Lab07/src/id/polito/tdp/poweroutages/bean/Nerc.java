@@ -59,4 +59,14 @@ public class Nerc {
 		builder.append(value);
 		return builder.toString();
 	}
+
+	public List<PowerOutage> getPolist() {
+		return polist;
+	}
+
+	public void setPolist(List<PowerOutage> polist) {
+		this.polist = polist;
+	}
+	
+	
 }

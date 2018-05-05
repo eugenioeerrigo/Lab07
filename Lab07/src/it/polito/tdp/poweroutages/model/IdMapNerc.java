@@ -30,4 +30,10 @@ public class IdMapNerc {
 		// TODO Auto-generated method stub
 		return map.get(int1);
 	}
+
+	public Map<Integer, Nerc> getMap() {
+		return map;
+	}
+	
+	
 }

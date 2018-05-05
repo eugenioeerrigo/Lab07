@@ -30,4 +30,10 @@ public class IdMapPowerOutage {
 	public PowerOutage get(int id) {
 		return map.get(id);
 	}
+
+	public Map<Integer, PowerOutage> getMap() {
+		return map;
+	}
+	
+	
 }

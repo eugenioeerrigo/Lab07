@@ -10,13 +10,13 @@ public class PowerOutage {
 	private int idArea;
 	private Nerc nerc;
 	private int idResp;
-	private int costumerAffected;
+	private int costumersAffected;
 	private int demandLoss;
 	private LocalDateTime begin;
 	private LocalDateTime end;
 	
 
-	public PowerOutage(int id, int idEventType, int idTag, int idArea, Nerc nerc, int idResp, int costumerAffected,
+	public PowerOutage(int id, int idEventType, int idTag, int idArea, Nerc nerc, int idResp, int costumersAffected,
 			int demandLoss, LocalDateTime begin, LocalDateTime end) {
 		this.id = id;
 		this.idEventType = idEventType;
@@ -24,7 +24,7 @@ public class PowerOutage {
 		this.idArea = idArea;
 		this.nerc = nerc;
 		this.idResp = idResp;
-		this.costumerAffected = costumerAffected;
+		this.costumersAffected = costumersAffected;
 		this.demandLoss = demandLoss;
 		this.begin = begin;
 		this.end = end;
@@ -78,12 +78,12 @@ public class PowerOutage {
 		this.idResp = idResp;
 	}
 
-	public int getCostumerAffected() {
-		return costumerAffected;
+	public int getCostumersAffected() {
+		return costumersAffected;
 	}
 
-	public void setCostumerAffected(int costumerAffected) {
-		this.costumerAffected = costumerAffected;
+	public void setCostumersAffected(int costumersAffected) {
+		this.costumersAffected = costumersAffected;
 	}
 
 	public int getDemandLoss() {
@@ -130,6 +130,12 @@ public class PowerOutage {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PowerOutage [id=" + id + ", nerc=" + nerc + ", costumersAffected=" + costumersAffected + ", begin="
+				+ begin + ", end=" + end + "]\n";
 	}
 
 	
