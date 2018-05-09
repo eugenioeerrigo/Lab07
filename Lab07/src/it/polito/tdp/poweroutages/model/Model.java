@@ -22,13 +22,11 @@ public class Model {
 
 	private int best;
 	private int hours;
-	private int a;
 	
 	public Model() {
 		podao = new PowerOutageDAO();
 		
 		hours = 0;
-		a = 0;
 		
 		nercMap = new IdMapNerc();
 		poMap = new IdMapPowerOutage();
@@ -63,6 +61,14 @@ public class Model {
 		risultato = null;
 		best = 0;
 		
+		//Ordino i PO del nerc in modo da ottenere un parziale già ordinato per anno ed essere agevolati nel check anniMax
+		nerc.getPolist().sort(new Comparator<PowerOutage>() {
+			@Override
+			public int compare(PowerOutage o1, PowerOutage o2) {
+				return o1.getBegin().compareTo(o2.getEnd());
+			}
+		});
+		
 		this.ricorsiva(0, anniMax, oreMax, nerc, parziale);
 		
 		if(risultato!=null) {
@@ -82,21 +88,18 @@ public class Model {
 		
 		System.out.println(livello+" "+parziale.toString()+" "+conteggioPersone(parziale)+" "+best);
 		
-		if(livello == nerc.getPolist().size()) {
-			if(controllaParziale(parziale, anniMax, oreMax)){
+		///if(livello == nerc.getPolist().size()) {
+		//	if(controllaParziale(parziale, anniMax, oreMax)){
 				if(this.conteggioPersone(parziale)>best) {
 					risultato = new ArrayList<>(parziale);
 					best = conteggioPersone(parziale);
 				}
-			}
-			//System.out.println(parziale.toString());
-		}
 		
 		for(PowerOutage po : nerc.getPolist()) {
 			if(!parziale.contains(po)) {
 			parziale.add(po);
 			
-			//if(controllaParziale(parziale, anniMax, oreMax))
+			if(controllaParziale(parziale, anniMax, oreMax))
 				this.ricorsiva(livello+1, anniMax, oreMax, nerc, parziale);
 			
 			parziale.remove(po);
@@ -106,33 +109,43 @@ public class Model {
 
 	private boolean controllaParziale(List<PowerOutage> parziale, int anniMax, int oreMax) {
 		
-		LocalDateTime bestY = null;
-		LocalDateTime oldY = null;
-		int d = 0;
+//		LocalDateTime bestY = null;
+//		LocalDateTime oldY = null;
+		int sum = 0;
 		
 		for(int i=0; i<parziale.size(); i++) {
-			d += (int) ChronoUnit.HOURS.between(parziale.get(i).getBegin(), parziale.get(i).getEnd());
+			sum += (int) ChronoUnit.HOURS.between(parziale.get(i).getBegin(), parziale.get(i).getEnd());
 			
-			LocalDateTime curr = parziale.get(i).getBegin();
-			if(bestY==null) {
-				bestY = curr;
-			}else {
-				if(curr.isBefore(bestY)) 
-					bestY = curr;
-			}
-			
-			if(oldY==null) {
-				oldY = curr;
-			} else if (curr.isAfter(oldY))
-				oldY = curr;
+//			SOSTITUITO MA FUNZIONANTE
+//			LocalDateTime curr = parziale.get(i).getBegin();
+//			if(bestY==null) {
+//				bestY = curr;
+//			}else {
+//				if(curr.isBefore(bestY)) 
+//					bestY = curr;
+//			}
+//			
+//			if(oldY==null) {
+//				oldY = curr;
+//			} else if (curr.isAfter(oldY))
+//				oldY = curr;
 		}
 		
-		a = (int) ChronoUnit.YEARS.between(bestY, oldY);
-		if(a>anniMax)
+		if(sum >oreMax)
 			return false;
 		
-		if(d>oreMax)
+//		a = (int) ChronoUnit.YEARS.between(bestY, oldY);
+//		if(a>anniMax)
+//			return false;
+		
+		//Check su anno
+		if(parziale.size()>=2) {
+		int y1 = parziale.get(0).getBegin().getYear();
+		int y2 = parziale.get(parziale.size()-1).getBegin().getYear();
+		if((y2 - y1 +1) > anniMax)
 			return false;
+		}
+		
 		
 		return true;
 		
