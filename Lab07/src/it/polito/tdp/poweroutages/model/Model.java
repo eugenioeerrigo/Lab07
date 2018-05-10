@@ -26,8 +26,6 @@ public class Model {
 	public Model() {
 		podao = new PowerOutageDAO();
 		
-		hours = 0;
-		
 		nercMap = new IdMapNerc();
 		poMap = new IdMapPowerOutage();
 		
@@ -58,18 +56,21 @@ public class Model {
 	public String worstCaseAnalysis(int anniMax, int oreMax, Nerc nerc) {
 		String sol = "";
 		List<PowerOutage> parziale = new ArrayList<>();
-		risultato = null;
+		risultato = new ArrayList<>();
 		best = 0;
+		hours = 0;
 		
 		//Ordino i PO del nerc in modo da ottenere un parziale già ordinato per anno ed essere agevolati nel check anniMax
 		nerc.getPolist().sort(new Comparator<PowerOutage>() {
 			@Override
 			public int compare(PowerOutage o1, PowerOutage o2) {
-				return o1.getBegin().compareTo(o2.getEnd());
+				return o1.getBegin().compareTo(o2.getBegin());
 			}
 		});
 		
-		this.ricorsiva(0, anniMax, oreMax, nerc, parziale);
+		System.out.println("Lista ordinata: "+nerc.getPolist());
+		
+		this.ricorsiva(anniMax, oreMax, nerc, parziale);
 		
 		if(risultato!=null) {
 			
@@ -84,9 +85,9 @@ public class Model {
 		return sol;
 	}
 
-	private void ricorsiva(int livello, int anniMax, int oreMax, Nerc nerc, List<PowerOutage> parziale) {
+	private void ricorsiva(int anniMax, int oreMax, Nerc nerc, List<PowerOutage> parziale) {       //NO LIVELLO
 		
-		System.out.println(livello+" "+parziale.toString()+" "+conteggioPersone(parziale)+" "+best);
+		System.out.println(parziale.toString()+" "+conteggioPersone(parziale)+" "+best);
 		
 		///if(livello == nerc.getPolist().size()) {
 		//	if(controllaParziale(parziale, anniMax, oreMax)){
@@ -100,7 +101,7 @@ public class Model {
 			parziale.add(po);
 			
 			if(controllaParziale(parziale, anniMax, oreMax))
-				this.ricorsiva(livello+1, anniMax, oreMax, nerc, parziale);
+				this.ricorsiva(anniMax, oreMax, nerc, parziale);
 			
 			parziale.remove(po);
 			}
